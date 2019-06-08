@@ -12,7 +12,7 @@ logger = logging.getLogger("server_run")
 
 
 def translate_url(url, link, chapter):
-    """Returns  absolute link from abolute and relative links """
+    """Returns  absolute link from absolute or relative links """
     if link.startswith("http"):
         return link
     elif link.startswith("//"):
@@ -73,7 +73,7 @@ def index():
 
     if div==[]:   
         ret_dict["error"] = "strange site"
-        logger.info("Site {} has no headers, nvigation bar and footers".format(url + chapter))
+        logger.info("Site {} has no headers, navigation bar and footers".format(url + chapter))
         return  json.dumps(ret_dict, indent=4)            
 
     nav_links = []
