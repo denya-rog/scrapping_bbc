@@ -2,3 +2,4 @@ bottle
 selenium
 beautifulsoup4
 requests
+lxml
