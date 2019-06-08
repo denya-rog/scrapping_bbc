@@ -1,0 +1,51 @@
+Using Docker:
+$ git init
+$ git clone https://github.com/denya-rog/scrapping_bbc.git
+$ docker build -t listen_server .
+$ docker run  -p 80:9180 listen_server:latest
+
+$curl "http://localhost?chapter=sport&news=5"
+
+If you dont want to use docker:
+First you must have firefox with version , greater then Firefox 62 or install last version
+apt-get install firefox
+Before installing and lounching script you shold intall virtualenv in terminal:
+
+$ sudo pip3 install virtualenv
+
+and louch virtualenv from terminal:
+
+$ virtualenv ENV
+
+Where ENV is a directory to place the new virtual environment. Then activate it:
+
+$ source bin/activate
+
+download all files from github :
+
+$ git init
+$ git clone https://github.com/denya-rog/scrapping_bbc.git
+
+Install all requirements from file requirements.txt with command in terminal:
+
+$ pip3 install -r requirements.txt
+
+copy geckodriver to /usr/local/bin
+
+$ cp geckodriver /usr/local/bin/
+ 
+lounch server
+$ python3 server.py
+
+$ curl "http://localhost:9180?chapter=sport&news=5"
+
+
+
+using Docker:
+$ git init
+$ git clone https://github.com/denya-rog/scrapping_bbc.git
+$ docker build -t listen_server .
+$ docker run  -p 80:9180 listen_server:latest
+
+server will be louched on port  9180  in order not to interfere with other programs 
+
