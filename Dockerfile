@@ -11,5 +11,5 @@ RUN pip3 install -r /home/requirements.txt
 
 RUN chmod  -R 777 /home/
 
-#CMD ["python3", "/home/server.py"]
+CMD ["python3", "/home/server.py"]
 

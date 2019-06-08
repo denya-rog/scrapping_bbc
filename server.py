@@ -92,6 +92,6 @@ def index():
  
 
 
-run(host='loclhost', port=9180)
+run(host='localhost', port=9180)
 
 
