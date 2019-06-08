@@ -7,7 +7,7 @@ COPY . /usr/local/bin/
 
 COPY . /home/
 
-RUN pip3 install  /home/requirements.txt
+RUN pip3 install -r /home/requirements.txt
 
 RUN chmod  -R 777 /home/
 
