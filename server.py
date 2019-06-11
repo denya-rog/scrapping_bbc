@@ -1,4 +1,5 @@
 import re
+import time
 import json
 import logging
 
@@ -27,33 +28,38 @@ def translate_url(url, link, chapter):
 @route('/')
 def index():
 
-    chapter = request.query.chapter 
-    num = request.query.news 
     logger.info("Get params")
-    if chapter==None or num==None:
-        print("missing parameter")
-        
-    url = 'https://www.bbc.com/'
-
+    chapter = request.query.chapter or None
+    num = request.query.news or None
+    print(num, chapter)
     ret_dict = dict()
     ret_dict["chapter"] = chapter
+    ret_dict["error"] = None
+    ret_dict["news"] = []
 
+    url = 'https://www.bbc.com/'
     response.content_type = 'application/json'
+
+    if chapter==None or num==None:
+        logger.info("missing parameter")
+        ret_dict["error"] = "missing parameter, should be like ?chapter=sport&news=5"
+        return  json.dumps(ret_dict, indent=4)
+
 
     r = requests.get(url + chapter)
     if r.status_code != 200:
-        ret_dict["error"] = "Wrong  chapter. Check if chapter exists"
+        ret_dict["error"] = "Wrong  chapter. Check if chapter exists or site aviable"
         logger.info("no response - wrong chapter - {}".format(url + chapter) )
         return  json.dumps(ret_dict, indent=4)
 
     try:
         num = int(num)
         if num<1:
-            ret_dict["error"] = "Wrong  number of news. Check parameters shold be like ?chapter=sport&news=5"
+            ret_dict["error"] = "Wrong  number of news. Check parameters should be like ?chapter=sport&news=5"
             logger.info("number of news less then 1 .num = {}".format(str(num)) )
             return  json.dumps(ret_dict, indent=4)
     except: 
-        ret_dict["error"] = "Insert not a number into number of news. Check parameters shold be like ?chapter=sport&news=5 "
+        ret_dict["error"] = "Insert not a number into number of news. Check parameters should be like ?chapter=sport&news=5 "
         logger.info("number of news is not integer .num = {}".format(str(num)) )
         return  json.dumps(ret_dict, indent=4)
 
@@ -62,6 +68,8 @@ def index():
 
     driver = webdriver.Firefox(options=options)
     driver.get(url + chapter)
+
+    time.sleep(3)
 
     html = driver.page_source
     bso = BeautifulSoup(html, features="lxml")
@@ -88,6 +96,10 @@ def index():
               "url": translate_url(url, i["href"], chapter)  
              }  for i in objects if i not in nav_links and len(i.getText())>25]
     ret_dict["news"] = news[:num]
+    if len(news)<num:
+        ret_dict["error"] = "Found and returns only {} links instead of {}".format(len(news), num)
+        logger.info("Found and returns only {} links instead of {}".format(len(news), num))
+
     logger.info("everything ok")
     return  json.dumps(ret_dict,  indent=4)
 
