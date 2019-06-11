@@ -1,14 +1,19 @@
 Using Docker:
+
 $ git init
 $ git clone https://github.com/denya-rog/scrapping_bbc.git
 $ docker build -t listen_server .
-$ docker run  -p 80:9180 listen_server:latest
+$ docker run  -p 80:9180 --shm-size 2g listen_server:latest
 
 $curl "http://localhost?chapter=sport&news=5"
 
+
+
 If you dont want to use docker:
-First you must have firefox with version , greater then Firefox 62 or install last version
-apt-get install firefox
+First you must have firefox with version , greater then Firefox 62 or install last version:
+
+$ apt-get install firefox
+
 Before installing and lounching script you shold intall virtualenv in terminal:
 
 $ sudo pip3 install virtualenv
@@ -39,13 +44,16 @@ $ python3 server.py
 
 $ curl "http://localhost:9180?chapter=sport&news=5"
 
-
-
-using Docker:
-$ git init
-$ git clone https://github.com/denya-rog/scrapping_bbc.git
-$ docker build -t listen_server .
-$ docker run  -p 80:9180 listen_server:latest
-
 server will be louched on port  9180  in order not to interfere with other programs 
+
+
+Running tests 
+Install requests:
+
+$ pip install requests
+
+When you have run server, if you run server on port , that differs from 80 enter tests.py , specify port manually 
+Then just run in terminal
+
+$ python tests.py 
 
