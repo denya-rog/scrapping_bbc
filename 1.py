@@ -24,6 +24,7 @@ def translate_url(url, link, chapter):
     else:
         return url + chapter.strip('/') + '/' + link
 
+
 async def cl_socket(writer, ret_dict):
     writer.write(json.dumps(ret_dict, indent=4).encode())
     await writer.drain()
@@ -53,8 +54,8 @@ async def handle_echo(reader, writer):
 
     print("\n",chapter,num, "\n")
 
-    r = requests.get(url + chapter)
-    if r.status_code != 200:
+    response = requests.get(url + chapter)
+    if response.status_code != 200:
         print("Enter to requsting")
         logger.info("No response - wrong chapter - {}".format(url + chapter) )
         ret_dict["error"] = "Wrong  chapter. \
@@ -80,8 +81,7 @@ Check if chapter exists or site aviable"
 
         return 
 
-    html = requests.get(url + chapter).text
-
+    html = response.text
     bso = BeautifulSoup(html, features="lxml")
     logger.info("Make bs object from url {}".format(url + chapter))
 
