@@ -52,36 +52,35 @@ async def handle_echo(reader, writer):
         chapter=chapter[0]
         num = num[0]
 
-    print("\n",chapter,num, "\n")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url + chapter) as response:
+            if response.status != 200:
+                print("Enter to requsting")
+                logger.info("No response - wrong chapter - {}".format(url + chapter))
+                ret_dict["error"] = "Wrong  chapter. \
+        Check if chapter exists or site aviable"
+                await cl_socket(writer, ret_dict)
+                return
 
-    response = requests.get(url + chapter)
-    if response.status_code != 200:
-        print("Enter to requsting")
-        logger.info("No response - wrong chapter - {}".format(url + chapter) )
-        ret_dict["error"] = "Wrong  chapter. \
-Check if chapter exists or site aviable"
-        await cl_socket(writer, ret_dict)
-        return
+            await asyncio.sleep(5)
+            try:
+                num = int(num)
+                if num<1:
+                    print("Enter to requsting")
+                    logger.info("Number of news less then 1 .num = {}".format(str(num)) )
+                    ret_dict["error"] = "Wrong  number of news. \
+                                        Check parameters should be like ?chapter=sport&news=5"
+                    await cl_socket(writer, ret_dict)
+                    return 
+            except: 
+                logger.info("Insert not a number .num = {}".format(str(num)) )
+                ret_dict["error"] = "Insert not a number into number of news. s\
+                                    Check parameters should be like ?chapter=sport&news=5 "
+                await cl_socket(writer, ret_dict)
+                return 
 
-    time.sleep(5)
-    try:
-        num = int(num)
-        if num<1:
-            print("Enter to requsting")
-            logger.info("Number of news less then 1 .num = {}".format(str(num)) )
-            ret_dict["error"] = "Wrong  number of news. \
-                                Check parameters should be like ?chapter=sport&news=5"
-            await cl_socket(writer, ret_dict)
-            return 
-    except: 
-        logger.info("Insert not a number .num = {}".format(str(num)) )
-        ret_dict["error"] = "Insert not a number into number of news. s\
-                            Check parameters should be like ?chapter=sport&news=5 "
-        await cl_socket(writer, ret_dict)
+            html = await response.text()
 
-        return 
-
-    html = response.text
     bso = BeautifulSoup(html, features="lxml")
     logger.info("Make bs object from url {}".format(url + chapter))
 
